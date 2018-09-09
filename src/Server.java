@@ -4,6 +4,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class Server {
 
@@ -32,6 +33,18 @@ public class Server {
     public static void yell(String msg) {
         for (Connection client : clients) {
             client.send(msg);
+        }
+    }
+
+    public static void pm(Connection origin, String nick, String msg) {
+        Optional<Connection> client = clients.stream()
+                .filter(connection -> connection.getNick() == nick)
+                .findAny();
+
+        if (client.isPresent()) {
+            client.get().send("De " + origin.getNick() + " para você:" + msg);
+        } else {
+            origin.send("Não foi encontrada nenhum usuário com esse nick");
         }
     }
 
