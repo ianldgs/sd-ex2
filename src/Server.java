@@ -2,6 +2,7 @@
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Server {
@@ -17,7 +18,7 @@ public class Server {
 
     static String msg;
 
-    static List<Connection> clients;
+    static List<Connection> clients = new ArrayList<>();
 
     public Server() {
         try {
@@ -44,9 +45,12 @@ public class Server {
         // inicializa a estrutura de armazenamento dos bancos
         while (true) {
             Connection client = new Connection(serversocket.accept());
-            clients.add(client);
             client.send("Digite seu nome:");
+
             String nick = client.receive();
+            client.setNick(nick);
+
+            clients.add(client);
             yell(nick + " conectado.");
 
             //TODO: new thread with the above code
