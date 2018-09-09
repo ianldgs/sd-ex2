@@ -13,8 +13,6 @@ public class Server {
      */
     static ServerSocket serversocket;
 
-    static Socket client_socket;
-
     static Connection c;
 
     static String msg;
@@ -60,7 +58,6 @@ public class Server {
 
     public static void main(String args[]) throws IOException {
         String texto, resposta;
-        int operacao;
 
         // inicializa o banco central
         new Server();
@@ -76,49 +73,8 @@ public class Server {
             clients.add(client);
             yell(nick + " conectado.");
 
-            //TODO: new thread with the above code
-
-            if (connect()) {
-                c = new Connection(client_socket);
-
-                // fica num loop de 5 mensagens
-                while (true) {
-                    msg = c.receive();
-
-                    System.out.println("Mensagem recebida: " + msg);
-
-                    c.send("/msgok");
-                }
-
-                try {
-                    client_socket.close();
-                } catch (Exception e) {
-                    System.out.println("N�o desconectei...");
-                }
-
-            } else {
-                try {
-                    serversocket.close();
-                    break;
-                } catch (Exception e) {
-                    System.out.println("N�o desconectei...");
-                }
-            }
+            ServerClientThread serverClientThread = new ServerClientThread(client);
+            serverClientThread.start();
         }
-
-    }
-
-    static boolean connect() {
-        boolean ret;
-        try {
-            client_socket = serversocket.accept();
-            System.out.println("Porta: " + client_socket.getLocalPort() + " "
-                    + client_socket.getPort());
-            ret = true;
-        } catch (Exception e) {
-            System.out.println("Erro de connect..." + e.getMessage());
-            ret = false;
-        }
-        return ret;
     }
 }
