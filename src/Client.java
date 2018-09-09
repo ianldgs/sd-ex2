@@ -24,6 +24,9 @@ public class Client {
 
         c = new Connection(socket);
 
+        String initialMessage = c.receive();
+        System.out.println(initialMessage);
+
         // DataInputStream in = new DataInputStream(System.in);
         BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 
@@ -37,6 +40,7 @@ public class Client {
                 }
 
                 c.send(msg);
+
                 texto = c.receive();
                 System.out.println(texto);
             } catch(Exception e) {
