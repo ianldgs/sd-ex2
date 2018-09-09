@@ -48,6 +48,16 @@ public class Server {
         }
     }
 
+    public static void listClients(Connection c) {
+        String connectedClients = "";
+
+        for (Connection client : clients) {
+            connectedClients += client.getNick() + "\n";
+        }
+
+        c.send(connectedClients);
+    }
+
     public static void main(String args[]) throws IOException {
         String texto, resposta;
         int operacao;
