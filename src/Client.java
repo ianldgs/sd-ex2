@@ -9,7 +9,6 @@ public class Client {
     public Client() {
         try {
             socket = new Socket("localhost",9600);
-            this.setShutdownHook();
         }
         catch (Exception e)
         {
@@ -55,10 +54,5 @@ public class Client {
         } catch (Exception e) {
             System.out.println("Nao desconectei..."+e);
         }
-    }
-
-    private void setShutdownHook() {
-        ClientExitHookThread clientExitHookThread = new ClientExitHookThread(socket);
-        Runtime.getRuntime().addShutdownHook(clientExitHookThread);
     }
 }
