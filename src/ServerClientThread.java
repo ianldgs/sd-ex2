@@ -11,7 +11,11 @@ public class ServerClientThread extends Thread {
 
         while (true) {
             String msg = this.connect.receive();
-            System.out.println("Mensagem recebida: " + msg);
+
+            if (!msg.isEmpty()) {
+                System.out.println("Mensagem recebida: " + msg);
+                this.connect.send(MessagesEnum.MESSAGE_OK.toString());
+            }
         }
     }
 }

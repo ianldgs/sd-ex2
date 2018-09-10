@@ -1,5 +1,8 @@
 import java.net.*;
 import java.io.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Client {
 
@@ -18,8 +21,6 @@ public class Client {
 
     public static void main(String args[])
     {
-        String msg;
-        String texto;
         new Client();
 
         c = new Connection(socket);
@@ -33,7 +34,7 @@ public class Client {
         // fica num loop de 5 mensagens
         while (true) {
             try {
-                msg = in.readLine();
+                String msg = in.readLine();
 
                 if (msg.equals("/sair")) {
                     System.exit(0);
@@ -41,8 +42,8 @@ public class Client {
 
                 c.send(msg);
 
-                texto = c.receive();
-                System.out.println(texto);
+                String response = c.receive();
+                messageCommand(response);
             } catch(Exception e) {
                 System.out.println("Erro na leitura "+e.getMessage());
                 break;
@@ -53,6 +54,15 @@ public class Client {
             socket.close();
         } catch (Exception e) {
             System.out.println("Nao desconectei..."+e);
+        }
+    }
+
+    private static void messageCommand(String response) {
+        if (response == MessagesEnum.MESSAGE_OK.toString()) {
+            Date date = new Date();
+            SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
+
+            System.out.println("Mensagem enviada às " + formatter.format(date));
         }
     }
 }
