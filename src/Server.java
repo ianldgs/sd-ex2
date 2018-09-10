@@ -43,7 +43,7 @@ public class Server {
 
     public static void pm(Connection origin, String nick, String msg) {
         Optional<Connection> client = clients.stream()
-                .filter(connection -> connection.getNick() == nick)
+                .filter(connection -> connection.getNick().equals(nick))
                 .findAny();
 
         if (client.isPresent()) {
