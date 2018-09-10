@@ -34,6 +34,13 @@ public class Server {
         }
     }
 
+    public static void yell(String msg, Connection c) {
+        for (Connection client : clients) {
+            if (client.getNick() != c.getNick())
+                client.send(msg);
+        }
+    }
+
     public static void pm(Connection origin, String nick, String msg) {
         Optional<Connection> client = clients.stream()
                 .filter(connection -> connection.getNick() == nick)

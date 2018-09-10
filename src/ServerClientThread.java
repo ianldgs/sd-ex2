@@ -21,6 +21,11 @@ public class ServerClientThread extends Thread {
                 String formattedDate = formatter.format(date);
 
                 System.out.println(msg + " - Mensagem recebida às " + formattedDate);
+
+                if (msg.contains("/yell ")) {
+                    msg.replace("/yell ", "");
+                    Server.yell(msg, this.connect);
+                }
             }
         }
     }
