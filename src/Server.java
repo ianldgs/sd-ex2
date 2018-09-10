@@ -36,8 +36,8 @@ public class Server {
 
     public static void yell(String msg, Connection c) {
         for (Connection client : clients) {
-            if (client.getNick() != c.getNick())
-                client.send(msg);
+            if (!client.getNick().equals(c.getNick()))
+                client.send("De " + c.getNick() + ": " + msg);
         }
     }
 
