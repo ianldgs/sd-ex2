@@ -23,7 +23,7 @@ public class ServerClientThread extends Thread {
                 System.out.println(msg + " - Mensagem recebida às " + formattedDate);
 
                 if (msg.contains("/yell ")) {
-                    msg.replace("/yell ", "");
+                    msg = msg.replace("/yell ", "");
                     Server.yell(msg, this.connect);
                 }
             }
