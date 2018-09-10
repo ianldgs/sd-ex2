@@ -40,6 +40,10 @@ public class ServerClientThread extends Thread {
 
                 Server.pm(this.connect, nick, msg);
             }
+
+            if (msg.contains("/list_users")) {
+                Server.listClients(this.connect);
+            }
         }
         catch (Exception ex) {
             System.out.println("Mensagem inválida - " + ex.getMessage());

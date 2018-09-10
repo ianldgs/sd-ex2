@@ -54,10 +54,10 @@ public class Server {
     }
 
     public static void listClients(Connection c) {
-        String connectedClients = "";
+        String connectedClients = "Usuários conectados:";
 
         for (Connection client : clients) {
-            connectedClients += client.getNick() + "\n";
+            connectedClients += "\n" + client.getNick();
         }
 
         c.send(connectedClients);
