@@ -1,3 +1,6 @@
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class ServerClientThread extends Thread {
     Connection connect = null;
 
@@ -13,8 +16,11 @@ public class ServerClientThread extends Thread {
             String msg = this.connect.receive();
 
             if (!msg.isEmpty()) {
-                System.out.println("Mensagem recebida: " + msg);
-                this.connect.send(MessagesEnum.MESSAGE_OK.toString());
+                Date date = new Date();
+                SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
+                String formattedDate = formatter.format(date);
+
+                System.out.println(msg + " - Mensagem recebida às " + formattedDate);
             }
         }
     }

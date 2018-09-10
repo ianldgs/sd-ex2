@@ -71,10 +71,12 @@ public class Server {
             client.setNick(nick);
 
             clients.add(client);
-            yell(nick + " conectado.");
 
             ServerClientThread serverClientThread = new ServerClientThread(client);
             serverClientThread.start();
+
+            String connectedMessage = nick + " conectado";
+            yell(connectedMessage);
         }
     }
 }

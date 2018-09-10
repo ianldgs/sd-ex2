@@ -31,21 +31,20 @@ public class Client {
         // DataInputStream in = new DataInputStream(System.in);
         BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 
+        ServerClientThread serverClientThread = new ServerClientThread(c);
+        serverClientThread.start();
+
         // fica num loop de 5 mensagens
         while (true) {
             try {
                 String msg = in.readLine();
+                c.send(msg);
 
                 if (msg.equals("/sair")) {
                     System.exit(0);
                 }
-
-                c.send(msg);
-
-                String response = c.receive();
-                messageCommand(response);
             } catch(Exception e) {
-                System.out.println("Erro na leitura "+e.getMessage());
+                System.out.println("Erro na leitura " +e.getMessage());
                 break;
             }
         }
@@ -54,15 +53,6 @@ public class Client {
             socket.close();
         } catch (Exception e) {
             System.out.println("Nao desconectei..."+e);
-        }
-    }
-
-    private static void messageCommand(String response) {
-        if (response == MessagesEnum.MESSAGE_OK.toString()) {
-            Date date = new Date();
-            SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
-
-            System.out.println("Mensagem enviada às " + formatter.format(date));
         }
     }
 }
