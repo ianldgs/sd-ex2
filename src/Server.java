@@ -49,7 +49,7 @@ public class Server {
         if (client.isPresent()) {
             client.get().send("De " + origin.getNick() + " para você:" + msg);
         } else {
-            origin.send("Não foi encontrada nenhum usuário com esse nick");
+            origin.send("Não foi encontrado nenhum usuário com esse nick");
         }
     }
 
