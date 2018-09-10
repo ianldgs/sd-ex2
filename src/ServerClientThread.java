@@ -22,11 +22,27 @@ public class ServerClientThread extends Thread {
 
                 System.out.println(msg + " - Mensagem recebida às " + formattedDate);
 
-                if (msg.contains("/yell ")) {
-                    msg = msg.replace("/yell ", "");
-                    Server.yell(msg, this.connect);
-                }
+                this.messageCommand(msg);
             }
+        }
+    }
+
+    private void messageCommand(String msg) {
+        try {
+            if (msg.contains("/yell ")) {
+                msg = msg.replace("/yell ", "");
+                Server.yell(msg, this.connect);
+            }
+
+            if (msg.contains("/pm ")) {
+                String nick = msg.substring(msg.indexOf("(") + 1, msg.indexOf(")"));
+                msg = msg.substring(msg.indexOf(")") + 1, msg.length());
+
+                Server.pm(this.connect, nick, msg);
+            }
+        }
+        catch (Exception ex) {
+            System.out.println("Mensagem inválida - " + ex.getMessage());
         }
     }
 }
