@@ -5,12 +5,9 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class Server {
-
-    /**
-     * @param args
-     */
     static ServerSocket serversocket;
 
     static Connection c;
@@ -34,17 +31,18 @@ public class Server {
         }
     }
 
-    public static void yell(String msg, Connection c) {
+    public static void say(String msg, Connection origin) {
         for (Connection client : clients) {
-            if (!client.getNick().equals(c.getNick()))
-                client.send("De " + c.getNick() + ": " + msg);
+            if (client != origin) {
+                client.send("[" + origin.getNick() + "]: " + msg);
+            }
         }
     }
 
     public static void pm(Connection origin, String nick, String msg) {
         Optional<Connection> client = clients.stream()
-                .filter(connection -> connection.getNick().equals(nick))
-                .findAny();
+            .filter(connection -> connection.getNick().equals(nick))
+            .findAny();
 
         if (client.isPresent()) {
             client.get().send("De " + origin.getNick() + " para você:" + msg);
@@ -61,6 +59,14 @@ public class Server {
         }
 
         c.send(connectedClients);
+    }
+
+    public static void disconnect(Connection client) {
+        clients = clients.stream()
+            .filter(connection -> connection != client)
+            .collect(Collectors.toList());
+
+        say("desconectado", client);
     }
 
     public static void main(String args[]) throws IOException {
@@ -82,8 +88,8 @@ public class Server {
             ServerClientThread serverClientThread = new ServerClientThread(client);
             serverClientThread.start();
 
-            String connectedMessage = nick + " conectado";
-            yell(connectedMessage);
+            say("conectado", client);
+            client.send("[Server] Bem vindo!");
         }
     }
 }

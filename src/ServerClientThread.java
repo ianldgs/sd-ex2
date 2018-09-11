@@ -2,10 +2,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class ServerClientThread extends Thread {
-    Connection connect = null;
+    private Connection connection;
 
     public ServerClientThread(Connection c) {
-        this.connect = c;
+        connection = c;
     }
 
     @Override
@@ -13,36 +13,50 @@ public class ServerClientThread extends Thread {
         super.run();
 
         while (true) {
-            String msg = this.connect.receive();
+            String msg = connection.receive();
 
-            if (!msg.isEmpty()) {
-                Date date = new Date();
-                SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
-                String formattedDate = formatter.format(date);
-
-                System.out.println(msg + " - Mensagem recebida às " + formattedDate);
-
-                this.messageCommand(msg);
+            if (msg.isEmpty()) {
+                Server.disconnect(connection);
+                return;
             }
+
+            Date date = new Date();
+            SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
+            String formattedDate = formatter.format(date);
+
+            System.out.println(msg + " - Mensagem recebida às " + formattedDate);
+
+            messageCommand(msg);
         }
     }
 
     private void messageCommand(String msg) {
         try {
-            if (msg.contains("/yell ")) {
-                msg = msg.replace("/yell ", "");
-                Server.yell(msg, this.connect);
+            if (msg.startsWith("/say ")) {
+                msg = msg.replace("/say ", "");
+
+                Server.say(msg, connection);
+
+                return;
             }
 
-            if (msg.contains("/pm ")) {
+            if (msg.startsWith("/pm")) {
                 String nick = msg.substring(msg.indexOf("(") + 1, msg.indexOf(")"));
                 msg = msg.substring(msg.indexOf(")") + 1, msg.length());
 
-                Server.pm(this.connect, nick, msg);
+                Server.pm(connection, nick, msg);
+
+                return;
             }
 
-            if (msg.contains("/list_users")) {
-                Server.listClients(this.connect);
+            if (msg.startsWith("/list_users")) {
+                Server.listClients(connection);
+
+                return;
+            }
+
+            if (msg.startsWith("/exit")) {
+                Server.disconnect(connection);
             }
         }
         catch (Exception ex) {

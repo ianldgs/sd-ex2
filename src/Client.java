@@ -34,13 +34,18 @@ public class Client {
         ServerClientThread serverClientThread = new ServerClientThread(c);
         serverClientThread.start();
 
-        // fica num loop de 5 mensagens
         while (true) {
             try {
                 String msg = in.readLine();
+
+                if (msg.isEmpty()) {
+                    continue;
+                }
+
                 c.send(msg);
 
-                if (msg.equals("/sair")) {
+                if (msg.equals("/exit")) {
+                    //TODO: is this working?
                     System.exit(0);
                 }
             } catch(Exception e) {
